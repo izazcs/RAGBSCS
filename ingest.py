@@ -1,5 +1,6 @@
 import os
 import urllib.request
+import urllib.error
 from pathlib import Path
 
 from langchain_chroma import Chroma
@@ -19,8 +20,23 @@ def download_pdf():
     if PDF_PATH.exists():
         return
     PDF_PATH.parent.mkdir(parents=True, exist_ok=True)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Referer": PDF_URL,
+    }
+    request = urllib.request.Request(PDF_URL, headers=headers)
     try:
-        urllib.request.urlretrieve(PDF_URL, str(PDF_PATH))
+        with urllib.request.urlopen(request, timeout=30) as response:
+            with open(PDF_PATH, "wb") as out_file:
+                out_file.write(response.read())
+    except urllib.error.HTTPError as exc:
+        if exc.code == 403:
+            raise RuntimeError(
+                f"PDF download blocked with HTTP 403 from {PDF_URL}. "
+                "That host may block automated downloads. "
+                "Upload the PDF manually to the Space or use an alternate public URL."
+            ) from exc
+        raise RuntimeError(f"Failed to download PDF from {PDF_URL}: {exc}") from exc
     except Exception as exc:
         raise RuntimeError(f"Failed to download PDF from {PDF_URL}: {exc}") from exc
 
