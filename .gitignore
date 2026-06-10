@@ -2,6 +2,7 @@
 app_error.log
 chat_history.db
 chroma_db/
+BCComputerScienceCoursecontent.pdf
 __pycache__/
 *.pyc
 *.pyo

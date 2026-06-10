@@ -1,4 +1,5 @@
 import os
+import urllib.request
 from pathlib import Path
 
 from langchain_chroma import Chroma
@@ -8,12 +9,25 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 BASE_DIR = Path(__file__).resolve().parent
 PDF_PATH = BASE_DIR / "BCComputerScienceCoursecontent.pdf"
+PDF_URL = "https://uom.edu.pk/storage/csit/downloads//1756185259/1756185259-[FILE]-Annexure-A--CS-Acadamic-Council.pdf"
 CHROMA_DIR = BASE_DIR / "chroma_db"
 COLLECTION_NAME = "course_content"
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 
+def download_pdf():
+    if PDF_PATH.exists():
+        return
+    PDF_PATH.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        urllib.request.urlretrieve(PDF_URL, str(PDF_PATH))
+    except Exception as exc:
+        raise RuntimeError(f"Failed to download PDF from {PDF_URL}: {exc}") from exc
+
+
 def ingest_course_content():
+    if not PDF_PATH.exists():
+        download_pdf()
     if not PDF_PATH.exists():
         raise FileNotFoundError(f"PDF file not found: {PDF_PATH}")
 

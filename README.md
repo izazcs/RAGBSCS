@@ -32,6 +32,7 @@ This folder contains a Streamlit-based RAG application for the course content PD
 2. Set your `GROQ_API_KEY` in the local `.env` file.
    - The app now loads only `courseContentRAG/coursecontent-rag-chatbot/.env`.
    - On Hugging Face Spaces, add `GROQ_API_KEY` as a secret.
+   - If `BCComputerScienceCoursecontent.pdf` is missing, the app will download it automatically from the configured remote URL.
 
 3. Run the app:
    ```bash
