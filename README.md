@@ -1,3 +1,15 @@
+---
+title: Course Content RAG
+emoji: "📘"
+colorFrom: "blue"
+colorTo: "green"
+sdk: streamlit
+sdk_version: "1.24.0"
+python_version: "3.11"
+app_file: app.py
+pinned: false
+---
+
 # Course Content RAG
 
 This folder contains a Streamlit-based RAG application for the course content PDF `BCComputerScienceCoursecontent.pdf`.
