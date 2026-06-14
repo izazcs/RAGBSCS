@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: Course Content RAG
 emoji: "📘"
@@ -48,3 +49,7 @@ This folder contains a Streamlit-based RAG application for the course content PD
 - Set `GROQ_API_KEY` in the Space secrets.
 - The app automatically creates `chroma_db` and `chat_history.db` in the `courseContentRAG` directory.
 - If the knowledge base is missing, use the sidebar "Refresh knowledge base" button to ingest the PDF.
+=======
+# RAGBSCS
+A RAG project of BS CS UOM Course contents.
+>>>>>>> 25fdd73ba2f754443b8b6fdba3cf2a4527cc8fbe
