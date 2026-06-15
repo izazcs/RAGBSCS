@@ -49,13 +49,29 @@ logging.basicConfig(
 
 
 def load_environment():
+    """Load environment variables from .env file or Streamlit secrets"""
+    # First, try to load from local .env file
     local_env = BASE_DIR / ".env"
     if local_env.exists():
         load_dotenv(dotenv_path=local_env, override=True)
-        key = os.getenv("GROQ_API_KEY")
-        if key:
-            clean = key.strip().strip('"').strip("'")
-            os.environ["GROQ_API_KEY"] = clean
+    
+    # For Streamlit Cloud, secrets are available via st.secrets
+    # Try to get GROQ_API_KEY from secrets first, fall back to env
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            key = st.secrets["GROQ_API_KEY"]
+            if key:
+                clean = key.strip().strip('"').strip("'")
+                os.environ["GROQ_API_KEY"] = clean
+    except Exception:
+        # st.secrets might not be available in all contexts
+        pass
+    
+    # Ensure at least try the environment variable
+    key = os.getenv("GROQ_API_KEY")
+    if key:
+        clean = key.strip().strip('"').strip("'")
+        os.environ["GROQ_API_KEY"] = clean
 
 
 def init_db():
@@ -342,13 +358,13 @@ def render_login():
             st.session_state.logged_in = True
             st.session_state.username = username
         else:
-            st.error("Invalid username or password. Use student / course2026.")
+            st.error("Invalid username or password. Use admin / Khanss.")
 
 
 def render_sidebar(username: str):
     st.sidebar.title("Course Content Assistant")
     st.sidebar.markdown("**Logged in as:** ``%s``" % username)
-    st.sidebar.info("Fixed login: student / course2026")
+    st.sidebar.info("Fixed login: admin / Khanss")
 
     if st.sidebar.checkbox("Show index stats"):
         st.sidebar.markdown(f"- **Vector store:** `{CHROMA_DIR}`")
